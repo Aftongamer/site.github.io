@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نمایش پست ها</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            direction: rtl;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f4f8;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            font-size: 28px;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+        }
+        #posts-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .post-item {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e0e0e0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        @media (min-width: 576px) {
+            .post-item {
+                width: calc(50% - 20px);
+                margin-left: 10px;
+                margin-right: 10px;
+            }
+        }
+        @media (min-width: 992px) {
+            .post-item {
+                width: calc(33.33% - 20px);
+            }
+        }
+        .post-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .post-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #3498db;
+            transition: color 0.3s ease;
+        }
+        .post-title:hover {
+            color: #217dbb;
+        }
+        .post-text {
+            font-size: 17px;
+            line-height: 1.8;
+            color: #4a6572;
+        }
+        .loading-message {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #95a5a6;
+        }
+        .error-message {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>پست ها</h1>
+        <ul id="posts-list">
+            <li class="loading-message">در حال بارگیری پست ها...</li>
+        </ul>
+    </div>
+    <script>
+        const postsList = document.getElementById('posts-list');
+
+        // تابع برای دریافت و نمایش پست ها
+        function fetchAndDisplayPosts() {
+            // آدرس API را با آدرس API خودتان جایگزین کنید
+            const apiUrl = 'https://sheetdb.io/api/v1/tfn4ydu8qekgy';
+
+            // نمایش پیام در حال بارگیری
+            postsList.innerHTML = '<li class="loading-message">در حال بارگیری پست ها...</li>';
+
+            // درخواست GET را با استفاده از fetch انجام دهید
+            fetch(apiUrl)
+                .then(response => {
+                    // بررسی کنید که آیا پاسخ OK است یا خیر (وضعیت HTTP 200)
+                    if (!response.ok) {
+                        throw new Error(`خطا در دریافت اطلاعات: وضعیت ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (Array.isArray(data) && data.length > 0) {
+                        postsList.innerHTML = '';
+
+                        data.forEach(post => {
+                            const listItem = document.createElement('li');
+                            listItem.className = 'post-item';
+                            listItem.innerHTML = `
+                                <h2 class="post-title">${post.title}</h2>
+                                <p class="post-text">${post.text}</p>
+                            `;
+                            postsList.appendChild(listItem);
+                        });
+                    } else {
+                        postsList.innerHTML = '<li class="error-message">هیچ پستی برای نمایش وجود ندارد.</li>';
+                    }
+                })
+                .catch(error => {
+                    postsList.innerHTML = `<li class="error-message">خطا در بارگیری پست ها: ${error.message}</li>`;
+                    console.error('خطا در دریافت پست ها:', error);
+                });
+        }
+
+        window.onload = fetchAndDisplayPosts;
+    </script>
+</body>
+</html>
