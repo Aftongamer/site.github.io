@@ -1,691 +1,220 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Afton بلاگ</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* Custom font for better Persian display */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Vazirmatn:wght@400;700&display=swap');
-        body {
-            font-family: 'Vazirmatn', 'Inter', sans-serif;
-            direction: rtl; /* Right-to-left direction for Persian */
-            text-align: right; /* Align text to the right */
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+		<title>test</title>
+		<style>
+html, body, #canvas {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
 
-            /* Animated Background */
-            background: linear-gradient(135deg, #f0f4f8, #e0e7ed, #d1d9e0, #c2cce3); /* Light gradient colors */
-            background-size: 400% 400%; /* Make the gradient larger than the viewport */
-            animation: gradientAnimation 15s ease infinite; /* Animation duration and loop */
-            min-height: 100vh; /* Ensure background covers full viewport height */
-        }
+body {
+	color: white;
+	background-color: black;
+	overflow: hidden;
+	touch-action: none;
+}
 
-        @keyframes gradientAnimation {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
+#canvas {
+	display: block;
+}
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1rem;
-        }
-        .card {
-            /* Glassy effect with purple tint */
-            background-color: rgba(150, 100, 200, 0.2); /* Purple tint with transparency */
-            backdrop-filter: blur(15px); /* Stronger blur for a more pronounced glassy effect */
-            -webkit-backdrop-filter: blur(15px); /* For Safari compatibility */
-            border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle white border for definition */
-            border-radius: 1.5rem; /* More rounded corners */
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37); /* Deeper, more diffused shadow */
-            padding: 2rem;
-            margin-bottom: 1.5rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-            position: relative; /* Needed for absolute positioning of summary */
-        }
-        .card:hover {
-            transform: translateY(-8px); /* More pronounced lift on hover */
-            background-color: rgba(150, 100, 200, 0.3); /* Slightly less transparent on hover */
-            box-shadow: 0 12px 48px 0 rgba(31, 38, 135, 0.45); /* Enhanced shadow on hover */
-        }
-        .card-title {
-            color: #2c3e50; /* Darker blue for titles */
-            font-size: 1.875rem; /* 3xl */
-            font-weight: 700; /* Bold */
-            margin-bottom: 1rem;
-        }
-        .card-text {
-            /* Subtle glassy effect for the text background */
-            background-color: rgba(255, 255, 255, 0.1); /* Very light white tint with transparency */
-            border-radius: 0.75rem; /* Slightly rounded corners for the text background */
-            padding: 1rem; /* Padding around the text */
-            color: #34495e; /* Slightly lighter dark blue for text */
-            font-size: 1.125rem; /* lg */
-            line-height: 1.75;
-            display: block; /* Ensures padding and background apply correctly */
-        }
-        .loading-message, .error-message {
-            text-align: center;
-            padding: 2rem;
-            font-size: 1.25rem;
-            color: #7f8c8d; /* Gray for messages */
-        }
-        .error-message {
-            color: #e74c3c; /* Red for errors */
-        }
-        .summary-button {
-            background-color: #6a0dad; /* Darker purple for the button */
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.75rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            margin-top: 1rem;
-            display: inline-block; /* Allows margin-top to work */
-        }
-        .summary-button:hover {
-            background-color: #7b2edc; /* Lighter purple on hover */
-            transform: translateY(-2px);
-        }
-        .summary-content {
-            background-color: rgba(255, 255, 255, 0.15); /* Slightly more opaque for summary */
-            border-radius: 0.75rem;
-            padding: 1rem;
-            margin-top: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            color: #2c3e50;
-            font-size: 1rem;
-            line-height: 1.6;
-        }
-        .summary-loading {
-            text-align: center;
-            padding: 1rem;
-            color: #7f8c8d;
-        }
-        .support-button {
-            background-color: #28a745; /* Green for support button */
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.75rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            margin-top: 1rem;
-            display: inline-block;
-            text-decoration: none; /* Remove underline from link */
-        }
-        .support-button:hover {
-            background-color: #218838; /* Darker green on hover */
-            transform: translateY(-2px);
-        }
-        .telegram-button {
-            background-color: #0088cc; /* Telegram blue */
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.75rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            margin-top: 1rem;
-            margin-right: 1rem; /* Add some space between buttons */
-            display: inline-block;
-            text-decoration: none;
-        }
-        .telegram-button:hover {
-            background-color: #007bb6; /* Darker blue on hover */
-            transform: translateY(-2px);
-        }
-        .post-button {
-            background-color: #ff5722; /* Orange for post button */
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.75rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            margin-top: 1rem;
-            margin-right: 1rem; /* Add some space between buttons */
-            display: inline-block;
-            text-decoration: none;
-        }
-        .post-button:hover {
-            background-color: #e64a19; /* Darker orange on hover */
-            transform: translateY(-2px);
-        }
-        .comments-button {
-            background-color: #5a67d8; /* Indigo for comments button */
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.75rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            margin-top: 1rem;
-            margin-right: 1rem; /* Add some space between buttons */
-            display: inline-block;
-            text-decoration: none;
-        }
-        .comments-button:hover {
-            background-color: #434eac; /* Darker indigo on hover */
-            transform: translateY(-2px);
-        }
+#canvas:focus {
+	outline: none;
+}
 
-        /* Modal/Dialog Styles */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6); /* Dark semi-transparent overlay */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        .modal-content {
-            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white background */
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 1.5rem;
-            padding: 2rem;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-            width: 90%;
-            max-width: 500px;
-            transform: translateY(-50px) scale(0.9);
-            opacity: 0;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-            position: relative;
-            max-height: 80vh; /* Limit height for scrollable content */
-            overflow-y: auto; /* Enable scrolling for content */
-        }
-        .modal-overlay.active .modal-content {
-            transform: translateY(0) scale(1);
-            opacity: 1;
-        }
-        .modal-content h3 {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: #2c3e50;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-        .modal-content label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #34495e;
-            font-weight: 600;
-        }
-        .modal-content input[type="text"],
-        .modal-content textarea {
-            width: 100%;
-            padding: 0.75rem;
-            margin-bottom: 1.5rem;
-            border: 1px solid rgba(0, 0, 0, 0.2);
-            border-radius: 0.75rem;
-            background-color: rgba(255, 255, 255, 0.7);
-            transition: border-color 0.3s ease;
-            color: #2c3e50;
-        }
-        .modal-content input[type="text"]:focus,
-        .modal-content textarea:focus {
-            outline: none;
-            border-color: #6a0dad;
-        }
-        .modal-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-        .modal-actions button {
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.75rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-        .modal-actions .submit-btn {
-            background-color: #4CAF50; /* Green submit button */
-            color: white;
-        }
-        .modal-actions .submit-btn:hover {
-            background-color: #45a049;
-            transform: translateY(-2px);
-        }
-        .modal-actions .close-btn {
-            background-color: #f44336; /* Red close button */
-            color: white;
-        }
-        .modal-actions .close-btn:hover {
-            background-color: #da190b;
-            transform: translateY(-2px);
-        }
-        .modal-message {
-            text-align: center;
-            margin-top: 1rem;
-            font-weight: 600;
-        }
-        .modal-message.success {
-            color: #28a745;
-        }
-        .modal-message.error {
-            color: #e74c3c;
-        }
-        .modal-close-icon {
-            position: absolute;
-            top: 1rem;
-            left: 1rem; /* Position on the left for RTL */
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #7f8c8d;
-            transition: color 0.2s ease;
-        }
-        .modal-close-icon:hover {
-            color: #34495e;
-        }
-        .comment-item {
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 0.75rem;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-        }
-        .comment-item strong {
-            color: #2c3e50;
-            font-size: 1.1rem;
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-        .comment-item p {
-            color: #34495e;
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-    </style>
-</head>
-<body class="antialiased">
-    <div class="container">
-        <header class="py-8 text-center">
-            <h1 class="text-5xl font-extrabold text-gray-800 mb-4">
-                <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">
-                    Afton بلاگ
-                </span>
-            </h1>
-            <p class="text-xl text-gray-600 mb-6">
-                اینجا می‌توانید محتوای جذاب من را مشاهده کنید.
-            </p>
-            <div class="flex flex-wrap justify-center gap-4">
-                <a href="https://zarinp.al/zarinp.al/afton" target="_blank" class="support-button">
-                    حمایت مالی (درگاه پرداخت) ❤️
-                </a>
-                <a href="https://t.me/Aftonplus" target="_blank" class="telegram-button">
-                    کانال تلگرام ✈️
-                </a>
-                <button id="newPostButton" class="post-button">
-                    ارسال محتوای جدید 📝
-                </button>
-                <button id="viewCommentsButton" class="comments-button">
-                    مشاهده نظرات و درخواست‌ها 💬
-                </button>
-            </div>
-        </header>
+#status, #status-splash, #status-progress {
+	position: absolute;
+	left: 0;
+	right: 0;
+}
 
-        <main id="content-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="loading-message col-span-full">در حال بارگذاری محتوا...</div>
-        </main>
-    </div>
+#status, #status-splash {
+	top: 0;
+	bottom: 0;
+}
 
-    <div id="newPostModalOverlay" class="modal-overlay">
-        <div class="modal-content">
-            <span id="closeModalIcon" class="modal-close-icon">&times;</span>
-            <h3>ارسال محتوای جدید</h3>
-            <form id="newPostForm">
-                <label for="postName">نام شما:</label>
-                <input type="text" id="postName" name="name" placeholder="نام خود را وارد کنید" required class="mb-4">
+#status {
+	background-color: #242424;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	visibility: hidden;
+}
 
-                <label for="postText">متن محتوا:</label>
-                <textarea id="postText" name="text" rows="5" placeholder="محتوای خود را اینجا بنویسید" required></textarea>
+#status-splash {
+	max-height: 100%;
+	max-width: 100%;
+	margin: auto;
+}
 
-                <div id="modalMessage" class="modal-message hidden"></div>
+#status-splash.show-image--false {
+	display: none;
+}
 
-                <div class="modal-actions">
-                    <button type="submit" class="submit-btn">ارسال</button>
-                    <button type="button" id="closeModalButton" class="close-btn">بستن</button>
-                </div>
-            </form>
-        </div>
-    </div>
+#status-splash.fullsize--true {
+	height: 100%;
+	width: 100%;
+	object-fit: contain;
+}
 
-    <div id="commentsModalOverlay" class="modal-overlay">
-        <div class="modal-content">
-            <span id="closeCommentsModalIcon" class="modal-close-icon">&times;</span>
-            <h3>نظرات و درخواست‌ها</h3>
-            <div id="commentsList" class="mt-4">
-                <div class="loading-message">در حال بارگذاری نظرات...</div>
-            </div>
-            <div class="modal-actions">
-                <button type="button" id="closeCommentsModalButton" class="close-btn">بستن</button>
-            </div>
-        </div>
-    </div>
+#status-splash.use-filter--false {
+	image-rendering: pixelated;
+}
 
-    <script>
-        // Global variables for Firebase (not directly used in this LLM feature, but good practice for future expansion)
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+#status-progress, #status-notice {
+	display: none;
+}
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const contentContainer = document.getElementById('content-container');
-            const apiUrl = 'https://sheetdb.io/api/v1/tfn4ydu8qekgy'; // API for fetching main content
-            const postApiUrl = 'https://sheetdb.io/api/v1/871aawa4fl299'; // API for posting new content (comments/requests)
-            const commentsApiUrl = 'https://sheetdb.io/api/v1/871aawa4fl299'; // API for fetching comments/requests
+#status-progress {
+	bottom: 10%;
+	width: 50%;
+	margin: 0 auto;
+}
 
-            // Elements for New Post Modal
-            const newPostButton = document.getElementById('newPostButton');
-            const newPostModalOverlay = document.getElementById('newPostModalOverlay');
-            const closeModalButton = document.getElementById('closeModalButton');
-            const closeModalIcon = document.getElementById('closeModalIcon');
-            const newPostForm = document.getElementById('newPostForm');
-            const postNameInput = document.getElementById('postName');
-            const postTextInput = document.getElementById('postText');
-            const modalMessageDiv = document.getElementById('modalMessage');
+#status-notice {
+	background-color: #5b3943;
+	border-radius: 0.5rem;
+	border: 1px solid #9b3943;
+	color: #e0e0e0;
+	font-family: 'Noto Sans', 'Droid Sans', Arial, sans-serif;
+	line-height: 1.3;
+	margin: 0 2rem;
+	overflow: hidden;
+	padding: 1rem;
+	text-align: center;
+	z-index: 1;
+}
+		</style>
+		<link id="-gd-engine-icon" rel="icon" type="image/png" href="index.icon.png" />
+<link rel="apple-touch-icon" href="index.apple-touch-icon.png"/>
 
-            // Elements for Comments Modal
-            const viewCommentsButton = document.getElementById('viewCommentsButton');
-            const commentsModalOverlay = document.getElementById('commentsModalOverlay');
-            const closeCommentsModalButton = document.getElementById('closeCommentsModalButton');
-            const closeCommentsModalIcon = document.getElementById('closeCommentsModalIcon');
-            const commentsListDiv = document.getElementById('commentsList');
+	</head>
+	<body>
+		<canvas id="canvas">
+			Your browser does not support the canvas tag.
+		</canvas>
 
+		<noscript>
+			Your browser does not support JavaScript.
+		</noscript>
 
-            /**
-             * Displays a message in the new post modal dialog.
-             * @param {string} message - The message to display.
-             * @param {string} type - 'success' or 'error' for styling.
-             */
-            function showModalMessage(message, type) {
-                modalMessageDiv.textContent = message;
-                modalMessageDiv.className = `modal-message ${type}`;
-                modalMessageDiv.classList.remove('hidden');
-            }
+		<div id="status">
+			<img id="status-splash" class="show-image--true fullsize--true use-filter--true" src="index.png" alt="">
+			<progress id="status-progress"></progress>
+			<div id="status-notice"></div>
+		</div>
 
-            /**
-             * Hides the new post modal message.
-             */
-            function hideModalMessage() {
-                modalMessageDiv.classList.add('hidden');
-                modalMessageDiv.textContent = '';
-            }
+		<script src="index.js"></script>
+		<script>
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":31440,"index.wasm":52126319},"focusCanvas":true,"gdextensionLibs":[]};
+const GODOT_THREADS_ENABLED = false;
+const engine = new Engine(GODOT_CONFIG);
 
-            /**
-             * Opens the new post modal.
-             */
-            function openNewPostModal() {
-                newPostModalOverlay.classList.add('active');
-                postNameInput.value = ''; // Clear inputs
-                postTextInput.value = '';
-                hideModalMessage(); // Hide any previous messages
-            }
+(function () {
+	const statusOverlay = document.getElementById('status');
+	const statusProgress = document.getElementById('status-progress');
+	const statusNotice = document.getElementById('status-notice');
 
-            /**
-             * Closes the new post modal.
-             */
-            function closeNewPostModal() {
-                newPostModalOverlay.classList.remove('active');
-            }
+	let initializing = true;
+	let statusMode = '';
 
-            // Event listener for opening the new post modal
-            newPostButton.addEventListener('click', openNewPostModal);
+	function setStatusMode(mode) {
+		if (statusMode === mode || !initializing) {
+			return;
+		}
+		if (mode === 'hidden') {
+			statusOverlay.remove();
+			initializing = false;
+			return;
+		}
+		statusOverlay.style.visibility = 'visible';
+		statusProgress.style.display = mode === 'progress' ? 'block' : 'none';
+		statusNotice.style.display = mode === 'notice' ? 'block' : 'none';
+		statusMode = mode;
+	}
 
-            // Event listeners for closing the new post modal
-            closeModalButton.addEventListener('click', closeNewPostModal);
-            closeModalIcon.addEventListener('click', closeNewPostModal);
-            newPostModalOverlay.addEventListener('click', (event) => {
-                if (event.target === newPostModalOverlay) {
-                    closeNewPostModal();
-                }
-            });
+	function setStatusNotice(text) {
+		while (statusNotice.lastChild) {
+			statusNotice.removeChild(statusNotice.lastChild);
+		}
+		const lines = text.split('\n');
+		lines.forEach((line) => {
+			statusNotice.appendChild(document.createTextNode(line));
+			statusNotice.appendChild(document.createElement('br'));
+		});
+	}
 
-            // Event listener for new post form submission
-            newPostForm.addEventListener('submit', async (event) => {
-                event.preventDefault(); // Prevent default form submission
+	function displayFailureNotice(err) {
+		console.error(err);
+		if (err instanceof Error) {
+			setStatusNotice(err.message);
+		} else if (typeof err === 'string') {
+			setStatusNotice(err);
+		} else {
+			setStatusNotice('An unknown error occurred.');
+		}
+		setStatusMode('notice');
+		initializing = false;
+	}
 
-                const name = postNameInput.value.trim();
-                const text = postTextInput.value.trim();
+	const missing = Engine.getMissingFeatures({
+		threads: GODOT_THREADS_ENABLED,
+	});
 
-                if (!name || !text) {
-                    showModalMessage('لطفاً تمام فیلدها را پر کنید.', 'error');
-                    return;
-                }
-
-                showModalMessage('در حال ارسال محتوا...', ''); // Show loading message
-                const submitButton = newPostForm.querySelector('.submit-btn');
-                submitButton.disabled = true; // Disable button during submission
-
-                try {
-                    const payload = {
-                        name: name,
-                        text: text
-                    };
-
-                    const response = await fetch(postApiUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(payload)
-                    });
-
-                    if (response.ok) {
-                        showModalMessage('محتوا با موفقیت ارسال شد! صفحه را رفرش کنید.', 'success');
-                        setTimeout(() => {
-                            closeNewPostModal();
-                            // Optionally, you can refresh the content on the main page
-                            // window.location.reload(); // Or call fetchAndDisplayContent()
-                        }, 2000); // Close after 2 seconds
-                    } else {
-                        const errorData = await response.json();
-                        showModalMessage(`خطا در ارسال محتوا: ${errorData.message || response.statusText}`, 'error');
-                    }
-                } catch (error) {
-                    console.error('Error posting content:', error);
-                    showModalMessage(`خطا در ارسال محتوا: ${error.message}`, 'error');
-                } finally {
-                    submitButton.disabled = false; // Re-enable button
-                }
-            });
-
-            /**
-             * Opens the comments modal and fetches data.
-             */
-            async function openCommentsModal() {
-                commentsModalOverlay.classList.add('active');
-                await fetchAndDisplayComments(); // Fetch and display comments when modal opens
-            }
-
-            /**
-             * Closes the comments modal.
-             */
-            function closeCommentsModal() {
-                commentsModalOverlay.classList.remove('active');
-            }
-
-            // Event listener for opening the comments modal
-            viewCommentsButton.addEventListener('click', openCommentsModal);
-
-            // Event listeners for closing the comments modal
-            closeCommentsModalButton.addEventListener('click', closeCommentsModal);
-            closeCommentsModalIcon.addEventListener('click', closeCommentsModal);
-            commentsModalOverlay.addEventListener('click', (event) => {
-                if (event.target === commentsModalOverlay) {
-                    closeCommentsModal();
-                }
-            });
-
-            /**
-             * Fetches comments/requests from the API and displays them in the comments modal.
-             */
-            async function fetchAndDisplayComments() {
-                commentsListDiv.innerHTML = '<div class="loading-message">در حال بارگذاری نظرات...</div>'; // Show loading message
-
-                try {
-                    const response = await fetch(commentsApiUrl);
-
-                    if (!response.ok) {
-                        throw new Error(`خطا در دریافت نظرات: ${response.status} ${response.statusText}`);
-                    }
-
-                    const data = await response.json();
-                    commentsListDiv.innerHTML = ''; // Clear loading message
-
-                    if (Array.isArray(data) && data.length > 0) {
-                        data.forEach(item => {
-                            const commentItem = document.createElement('div');
-                            commentItem.className = 'comment-item';
-                            const name = item.name || 'نامشخص';
-                            const text = item.text || 'بدون متن';
-                            commentItem.innerHTML = `
-                                <strong>${name}:</strong>
-                                <p>${text}</p>
-                            `;
-                            commentsListDiv.appendChild(commentItem);
-                        });
-                    } else {
-                        commentsListDiv.innerHTML = '<div class="error-message">هیچ نظر یا درخواستی یافت نشد.</div>';
-                    }
-                } catch (error) {
-                    console.error('Error fetching comments:', error);
-                    commentsListDiv.innerHTML = `<div class="error-message">خطا در بارگذاری نظرات: ${error.message}</div>`;
-                }
-            }
-
-
-            /**
-             * Fetches data from the specified API URL and displays it on the main page.
-             * Handles loading states and errors.
-             */
-            async function fetchAndDisplayContent() {
-                // Display loading message
-                contentContainer.innerHTML = '<div class="loading-message col-span-full">در حال بارگذاری محتوا...</div>';
-
-                try {
-                    const response = await fetch(apiUrl);
-
-                    // Check if the response is successful
-                    if (!response.ok) {
-                        throw new Error(`خطا در دریافت داده: ${response.status} ${response.statusText}`);
-                    }
-
-                    const data = await response.json();
-
-                    // Clear loading message
-                    contentContainer.innerHTML = '';
-
-                    // Check if data is an array and not empty
-                    if (Array.isArray(data) && data.length > 0) {
-                        data.forEach((item, index) => {
-                            const card = document.createElement('div');
-                            card.className = 'card'; // Apply base card styles
-
-                            // Ensure title and text exist before displaying
-                            const title = item.title || 'بدون عنوان';
-                            const text = item.text || 'بدون متن';
-
-                            card.innerHTML = `
-                                <h2 class="card-title">${title}</h2>
-                                <p class="card-text">${text}</p>
-                                <button class="summary-button" data-index="${index}">خلاصه کردن ✨</button>
-                                <div id="summary-output-${index}" class="summary-content hidden"></div>
-                            `;
-                            contentContainer.appendChild(card);
-                        });
-
-                        // Add event listeners for summary buttons after cards are rendered
-                        document.querySelectorAll('.summary-button').forEach(button => {
-                            button.addEventListener('click', async (event) => {
-                                const button = event.target;
-                                const cardElement = button.closest('.card');
-                                const originalText = cardElement.querySelector('.card-text').textContent;
-                                const summaryOutputDiv = cardElement.querySelector(`#summary-output-${button.dataset.index}`);
-
-                                // If summary is already visible, hide it
-                                if (!summaryOutputDiv.classList.contains('hidden')) {
-                                    summaryOutputDiv.classList.add('hidden');
-                                    summaryOutputDiv.innerHTML = ''; // Clear content when hidden
-                                    button.textContent = 'خلاصه کردن ✨';
-                                    return;
-                                }
-
-                                button.textContent = 'در حال خلاصه سازی...';
-                                summaryOutputDiv.classList.remove('hidden');
-                                summaryOutputDiv.innerHTML = '<div class="summary-loading">در حال تولید خلاصه...</div>';
-
-                                try {
-                                    const prompt = `متن زیر را به فارسی خلاصه کن: \n\n"${originalText}"`;
-                                    let chatHistory = [];
-                                    chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-                                    const payload = { contents: chatHistory };
-                                    const apiKey = ""; // Canvas will provide this at runtime
-                                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
-                                    const response = await fetch(apiUrl, {
-                                        method: 'POST',
-                                        headers: { 'Content-Type': 'application/json' },
-                                        body: JSON.stringify(payload)
-                                    });
-
-                                    const result = await response.json();
-
-                                    if (result.candidates && result.candidates.length > 0 &&
-                                        result.candidates[0].content && result.candidates[0].content.parts &&
-                                        result.candidates[0].content.parts.length > 0) {
-                                        const summaryText = result.candidates[0].content.parts[0].text;
-                                        summaryOutputDiv.innerHTML = `<p>${summaryText}</p>`;
-                                        button.textContent = 'پنهان کردن خلاصه';
-                                    } else {
-                                        summaryOutputDiv.innerHTML = '<p class="text-red-500">خطا در دریافت خلاصه.</p>';
-                                        button.textContent = 'خلاصه کردن ✨';
-                                    }
-                                } catch (error) {
-                                    console.error('Error calling Gemini API:', error);
-                                    summaryOutputDiv.innerHTML = `<p class="text-red-500">خطا: ${error.message}</p>`;
-                                    button.textContent = 'خلاصه کردن ✨';
-                                }
-                            });
-                        });
-
-                    } else {
-                        // Display message if no data is found
-                        contentContainer.innerHTML = '<div class="error-message col-span-full">داده‌ای برای نمایش یافت نشد.</div>';
-                    }
-                } catch (error) {
-                    // Display error message
-                    console.error('Error fetching content:', error);
-                    contentContainer.innerHTML = `<div class="error-message col-span-full">خطا در بارگذاری محتوا: ${error.message}</div>`;
-                }
-            }
-
-            // Call the function to fetch and display content when the page loads
-            fetchAndDisplayContent();
-        });
-    </script>
-</body>
+	if (missing.length !== 0) {
+		if (GODOT_CONFIG['serviceWorker'] && GODOT_CONFIG['ensureCrossOriginIsolationHeaders'] && 'serviceWorker' in navigator) {
+			let serviceWorkerRegistrationPromise;
+			try {
+				serviceWorkerRegistrationPromise = navigator.serviceWorker.getRegistration();
+			} catch (err) {
+				serviceWorkerRegistrationPromise = Promise.reject(new Error('Service worker registration failed.'));
+			}
+			// There's a chance that installing the service worker would fix the issue
+			Promise.race([
+				serviceWorkerRegistrationPromise.then((registration) => {
+					if (registration != null) {
+						return Promise.reject(new Error('Service worker already exists.'));
+					}
+					return registration;
+				}).then(() => engine.installServiceWorker()),
+				// For some reason, `getRegistration()` can stall
+				new Promise((resolve) => {
+					setTimeout(() => resolve(), 2000);
+				}),
+			]).then(() => {
+				// Reload if there was no error.
+				window.location.reload();
+			}).catch((err) => {
+				console.error('Error while registering service worker:', err);
+			});
+		} else {
+			// Display the message as usual
+			const missingMsg = 'Error\nThe following features required to run Godot projects on the Web are missing:\n';
+			displayFailureNotice(missingMsg + missing.join('\n'));
+		}
+	} else {
+		setStatusMode('progress');
+		engine.startGame({
+			'onProgress': function (current, total) {
+				if (current > 0 && total > 0) {
+					statusProgress.value = current;
+					statusProgress.max = total;
+				} else {
+					statusProgress.removeAttribute('value');
+					statusProgress.removeAttribute('max');
+				}
+			},
+		}).then(() => {
+			setStatusMode('hidden');
+		}, displayFailureNotice);
+	}
+}());
+		</script>
+	</body>
 </html>
+
